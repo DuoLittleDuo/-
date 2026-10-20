@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 环境与密钥
+backend/.env
+
+# 运行时数据
+backend/data/
+backend/.cache/
+*.db
+*.db-wal
+*.db-shm
+*.npy
+
+# 前端
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/e2e/failure.png
+
+# 项目资料与素材源文件（不参与网页运行）
+*.docx
+*.mp4
+泗水柘沟土陶_宠物产品单图(1)/
+
+# 编辑器
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply bg-cream text-ink antialiased;
+  }
+
+  body {
+    @apply min-h-screen font-body;
+    background-image:
+      radial-gradient(circle at 12% 8%, rgba(184, 92, 56, 0.05), transparent 32%),
+      radial-gradient(circle at 88% 2%, rgba(127, 147, 129, 0.06), transparent 28%);
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+  }
+
+  ::selection {
+    @apply bg-clay/20;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-clay px-6 py-2.5 text-sm font-medium text-cream transition hover:bg-clay-dark disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-ink/15 px-4 py-2 text-sm text-ink/70 transition hover:border-clay hover:text-clay;
+  }
+
+  .input-base {
+    @apply w-full rounded-xl border border-ink/15 bg-white/80 px-4 py-3 text-sm text-ink outline-none transition placeholder:text-ink/30 focus:border-clay focus:ring-2 focus:ring-clay/15;
+  }
+
+  .card {
+    @apply overflow-hidden rounded-2xl border border-ink/10 bg-white/70 shadow-card transition duration-300;
+  }
+
+  .tag-pill {
+    @apply rounded-full bg-sand px-2.5 py-1 text-[11px] text-ink/55;
+  }
+}
