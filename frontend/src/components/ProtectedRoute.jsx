@@ -3,11 +3,11 @@ import { useAuth } from '../context/AuthContext'
 import Spinner from './Spinner'
 
 export default function ProtectedRoute() {
-  const { token, booting } = useAuth()
+  const { canBrowse, booting } = useAuth()
   const location = useLocation()
 
   if (booting) return <Spinner fullscreen label="正在恢复登录状态" />
-  if (!token) {
+  if (!canBrowse) {
     return (
       <Navigate
         to="/welcome"

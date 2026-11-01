@@ -89,10 +89,10 @@ export default function CartPage() {
       </div>
 
       {error ? (
-        <div className="mt-6 rounded-xl bg-clay/10 px-4 py-3 text-sm text-clay">{error}</div>
+        <div className="mt-6 rounded-frame bg-clay/10 px-4 py-3 text-sm text-clay">{error}</div>
       ) : null}
       {actionError ? (
-        <div className="mt-4 rounded-xl bg-clay/10 px-4 py-3 text-sm text-clay">
+        <div className="mt-4 rounded-frame bg-clay/10 px-4 py-3 text-sm text-clay">
           {actionError}
         </div>
       ) : null}
@@ -114,7 +114,7 @@ export default function CartPage() {
       ) : (
         <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
           <div className="space-y-3">
-            <div className="flex items-center justify-between rounded-xl border border-ink/10 bg-white/50 px-4 py-3">
+            <div className="flex items-center justify-between rounded-frame border border-line bg-paper/50 px-4 py-3">
               <label className="flex cursor-pointer items-center gap-2 text-xs text-ink/55">
                 <input
                   type="checkbox"
@@ -134,8 +134,8 @@ export default function CartPage() {
               return (
                 <div
                   key={item.id}
-                  className={`rounded-2xl border bg-white/70 p-4 transition ${
-                    checked ? 'border-clay/25' : 'border-ink/10'
+                  className={`rounded-frame border bg-paper/60 p-4 transition ${
+                    checked ? 'border-clay/25' : 'border-line'
                   }`}
                 >
                   <div className="flex gap-3 sm:gap-4">
@@ -149,7 +149,7 @@ export default function CartPage() {
 
                     <Link
                       to={`/product/${product.id}`}
-                      className="w-20 shrink-0 overflow-hidden rounded-xl sm:w-24"
+                      className="w-20 shrink-0 overflow-hidden rounded-frame sm:w-24"
                     >
                       <ProductVisual product={product} size="text-3xl" showBadge={false} />
                     </Link>
@@ -207,7 +207,7 @@ export default function CartPage() {
             })}
           </div>
 
-          <aside className="h-fit rounded-2xl border border-ink/10 bg-white/70 p-5 lg:sticky lg:top-24">
+          <aside className="h-fit rounded-frame border border-line bg-paper/60 p-5 lg:sticky lg:top-24">
             <h2 className="font-display text-lg text-ink">结算</h2>
             <div className="mt-4 space-y-2 text-xs text-ink/50">
               <div className="flex justify-between">
@@ -224,7 +224,7 @@ export default function CartPage() {
               </div>
             </div>
 
-            <div className="mt-4 flex items-end justify-between border-t border-ink/10 pt-4">
+            <div className="mt-4 flex items-end justify-between border-t border-line pt-4">
               <span className="text-xs text-ink/45">应付</span>
               <span className="text-clay">
                 <span className="text-xs">¥</span>

@@ -6,6 +6,7 @@ import EmptyState from '../components/EmptyState'
 import OrderStatusBadge from '../components/OrderStatusBadge'
 import Pagination from '../components/Pagination'
 import PetLetterModal from '../components/PetLetterModal'
+import ProductImage from '../components/ProductImage'
 import Spinner from '../components/Spinner'
 import { formatDateTime } from '../utils/format'
 
@@ -114,7 +115,7 @@ export default function OrdersPage() {
         </Link>
       </div>
 
-      <div className="mt-6 flex gap-1 overflow-x-auto rounded-full border border-ink/10 bg-white/50 p-1">
+      <div className="no-scrollbar mt-8 flex gap-7 overflow-x-auto border-b border-line">
         {TABS.map((tab) => {
           const active = (tab.key === 'all' && !status) || tab.key === status
           return (
@@ -122,8 +123,8 @@ export default function OrdersPage() {
               key={tab.key}
               type="button"
               onClick={() => selectTab(tab.key)}
-              className={`shrink-0 rounded-full px-4 py-2 text-xs transition ${
-                active ? 'bg-clay text-cream shadow-sm' : 'text-ink/50 hover:text-clay'
+              className={`shrink-0 border-b-2 pb-3 text-sm transition duration-300 ease-silk ${
+                active ? 'border-clay text-clay' : 'border-transparent text-ink/50 hover:text-clay'
               }`}
             >
               {tab.label}
@@ -133,7 +134,7 @@ export default function OrdersPage() {
       </div>
 
       {error ? (
-        <div className="mt-5 rounded-xl bg-clay/10 px-4 py-3 text-sm text-clay">{error}</div>
+        <div className="mt-5 rounded-frame bg-clay/10 px-4 py-3 text-sm text-clay">{error}</div>
       ) : null}
 
       <div className="mt-6">
@@ -155,9 +156,9 @@ export default function OrdersPage() {
               {data.items.map((order) => (
                 <article
                   key={order.id}
-                  className="rounded-2xl border border-ink/10 bg-white/70 p-5"
+                  className="rounded-frame border border-line bg-paper/60 p-5"
                 >
-                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-ink/5 pb-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-ink/40">
                       <span>订单号 {order.order_no}</span>
                       <span>{formatDateTime(order.created_at)}</span>
@@ -168,11 +169,12 @@ export default function OrdersPage() {
                   <div className="mt-4 space-y-3">
                     {order.items.map((item) => (
                       <div key={item.id} className="flex items-center gap-3">
-                        <div
-                          className="grid h-12 w-12 shrink-0 place-items-center rounded-lg text-xl"
-                          style={{ backgroundColor: `${item.theme_color || '#B85C38'}18` }}
-                        >
-                          {item.cover_emoji || '🏺'}
+                        <div className="h-12 w-12 shrink-0 overflow-hidden">
+                          <ProductImage
+                            sku={item.sku}
+                            alt={item.product_name}
+                            sizes="48px"
+                          />
                         </div>
                         <div className="min-w-0 flex-1">
                           {item.product_id ? (
@@ -196,7 +198,7 @@ export default function OrdersPage() {
                     ))}
                   </div>
 
-                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-ink/5 pt-3">
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3">
                     <p className="text-xs text-ink/45">
                       共 {order.total_quantity} 件，合计{' '}
                       <span className="text-base font-semibold text-clay">

@@ -139,7 +139,7 @@ export default function CheckoutPage() {
 
       <form onSubmit={handleSubmit} className="mt-7 grid gap-6 lg:grid-cols-[1fr_340px]">
         <div className="space-y-5">
-          <section className="rounded-2xl border border-ink/10 bg-white/70 p-5 sm:p-6">
+          <section className="rounded-frame border border-line bg-paper/60 p-5 sm:p-6">
             <h2 className="font-display text-lg text-ink">收货信息</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <label className="block text-xs font-medium text-ink/60">
@@ -187,16 +187,16 @@ export default function CheckoutPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-ink/10 bg-white/70 p-5 sm:p-6">
+          <section className="rounded-frame border border-line bg-paper/60 p-5 sm:p-6">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-lg text-ink">商品清单</h2>
               <span className="text-[11px] text-ink/35">共 {totalQuantity} 件</span>
             </div>
 
-            <div className="mt-4 divide-y divide-ink/5">
+            <div className="mt-4 divide-y divide-line">
               {items.map((item) => (
                 <div key={item.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-                  <div className="w-16 shrink-0 overflow-hidden rounded-lg">
+                  <div className="w-16 shrink-0 overflow-hidden rounded-frame">
                     <ProductVisual product={item.product} size="text-2xl" showBadge={false} />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -212,7 +212,7 @@ export default function CheckoutPage() {
           </section>
         </div>
 
-        <aside className="h-fit rounded-2xl border border-ink/10 bg-white/70 p-5 lg:sticky lg:top-24">
+        <aside className="h-fit rounded-frame border border-line bg-paper/60 p-5 lg:sticky lg:top-24">
           <h2 className="font-display text-lg text-ink">支付明细</h2>
           <div className="mt-4 space-y-2 text-xs text-ink/50">
             <div className="flex justify-between">
@@ -225,7 +225,7 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          <div className="mt-4 flex items-end justify-between border-t border-ink/10 pt-4">
+          <div className="mt-4 flex items-end justify-between border-t border-line pt-4">
             <span className="text-xs text-ink/45">应付</span>
             <span className="text-clay">
               <span className="text-xs">¥</span>
@@ -234,7 +234,7 @@ export default function CheckoutPage() {
           </div>
 
           {error ? (
-            <p className="mt-4 rounded-lg bg-clay/10 px-3 py-2 text-xs leading-5 text-clay">
+            <p className="mt-4 rounded-frame bg-clay/10 px-3 py-2 text-xs leading-5 text-clay">
               {error}
             </p>
           ) : null}

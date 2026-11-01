@@ -1,11 +1,11 @@
 import axios from 'axios'
+import { API_TIMEOUT, DEMO_MODE, TOKEN_KEY, USER_KEY } from '../config/runtime'
 
-export const TOKEN_KEY = 'zgtc_token'
-export const USER_KEY = 'zgtc_user'
+export { TOKEN_KEY, USER_KEY }
 
 const api = axios.create({
   baseURL: '/api',
-  timeout: 20000,
+  timeout: API_TIMEOUT,
 })
 
 api.interceptors.request.use((config) => {
@@ -26,7 +26,8 @@ api.interceptors.response.use(
     if (status === 401 && !isAuthAttempt) {
       localStorage.removeItem(TOKEN_KEY)
       localStorage.removeItem(USER_KEY)
-      if (window.location.pathname !== '/login') {
+      // 演示模式：清掉失效会话后转为访客继续浏览，不打断演示
+      if (!DEMO_MODE && window.location.pathname !== '/login') {
         window.location.assign('/login')
       }
     }

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
+import { IconPaw } from './icons'
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -87,7 +88,7 @@ export default function PetLetterModal({ open, order, onClose }) {
         aria-labelledby="pet-letter-title"
         aria-describedby="pet-letter-body"
         tabIndex={-1}
-        className="relative my-auto max-h-[86vh] w-full max-w-lg animate-scale-in overflow-y-auto overscroll-contain rounded-[28px] border border-clay/20 bg-cream px-6 py-8 shadow-soft outline-none motion-reduce:animate-none sm:px-9 sm:py-10"
+        className="relative my-auto max-h-[86vh] w-full max-w-lg animate-scale-in overflow-y-auto overscroll-contain border border-line bg-cream px-6 py-8 shadow-soft outline-none motion-reduce:animate-none sm:px-9 sm:py-10"
         style={{
           backgroundImage:
             'radial-gradient(circle at 18% 0%, rgba(199, 154, 82, 0.10), transparent 42%), radial-gradient(circle at 92% 100%, rgba(184, 92, 56, 0.08), transparent 40%)',
@@ -131,9 +132,7 @@ export default function PetLetterModal({ open, order, onClose }) {
         </div>
 
         <div className="mt-6 flex items-end justify-between gap-4">
-          <span className="text-lg" aria-hidden="true">
-            🐾
-          </span>
+          <IconPaw className="h-5 w-5 text-clay/45" />
           <div className="text-right">
             <p className="font-display text-sm text-ink/60">—— 永远爱你的家人</p>
             <p className="mt-1 text-[10px] text-ink/30">{today}</p>

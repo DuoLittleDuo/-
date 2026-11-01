@@ -1,14 +1,35 @@
 import api from './client'
+import { isGuestDemo, localFirst } from './demo'
+import { demoCart } from '../data/demoStore'
 
-export const getCart = () => api.get('/cart').then((res) => res.data)
+export const getCart = () =>
+  localFirst(
+    () => demoCart.get(),
+    () => api.get('/cart').then((res) => res.data),
+  )
 
 export const addItem = (productId, quantity = 1) =>
-  api.post('/cart/items', { product_id: productId, quantity }).then((res) => res.data)
+  localFirst(
+    () => demoCart.add(productId, quantity),
+    () => api.post('/cart/items', { product_id: productId, quantity }).then((res) => res.data),
+  )
 
 export const updateItem = (itemId, quantity) =>
-  api.patch(`/cart/items/${itemId}`, { quantity }).then((res) => res.data)
+  localFirst(
+    () => demoCart.update(itemId, quantity),
+    () => api.patch(`/cart/items/${itemId}`, { quantity }).then((res) => res.data),
+  )
 
 export const removeItem = (itemId) =>
-  api.delete(`/cart/items/${itemId}`).then((res) => res.data)
+  localFirst(
+    () => demoCart.remove(itemId),
+    () => api.delete(`/cart/items/${itemId}`).then((res) => res.data),
+  )
 
-export const clearCart = () => api.delete('/cart').then((res) => res.data)
+export const clearCart = () =>
+  localFirst(
+    () => demoCart.clear(),
+    () => api.delete('/cart').then((res) => res.data),
+  )
+
+export { isGuestDemo }

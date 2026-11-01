@@ -1,328 +1,464 @@
+import { useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import WelcomeImage from '../components/WelcomeImage'
+import AssistantWidget from '../components/AssistantWidget'
+import Header from '../components/Header'
+import ProductImage from '../components/ProductImage'
+import Reveal from '../components/Reveal'
+import SiteFooter from '../components/SiteFooter'
+import { IconArrowRight } from '../components/icons'
 import { useAuth } from '../context/AuthContext'
 
-const SEASONS = [
+const TICKER = [
+  { sku: 'ZG-SB-01', name: '山河绞胎 · 犬用食盆' },
+  { sku: 'ZG-SW-01', name: '流纹绞胎 · 蓄水碗' },
+  { sku: 'ZG-GP-01', name: '刻花骨朵 · 宠物名牌' },
+  { sku: 'ZG-BJ-01', name: '窑变釉 · 卧猫摆件' },
+  { sku: 'ZG-JN-01', name: '窑变星河 · 纪念罐' },
+  { sku: 'ZG-SB-07', name: '同纹主人杯与猫碗' },
+  { sku: 'ZG-SW-03', name: '窑变天青 · 猫咪饮水器' },
+  { sku: 'ZG-BJ-06', name: '窑变星河 · 猫月摆件' },
+]
+
+const CATEGORIES = [
+  { sku: 'ZG-SB-01', en: 'FOOD BOWL', name: '宠物食盆', desc: '深口弧壁，盛住每一口' },
+  { sku: 'ZG-SW-01', en: 'WATER BOWL', name: '宠物水碗', desc: '底重心低，清水更稳' },
+  { sku: 'ZG-GP-01', en: 'ID TAG', name: '宠物挂牌', desc: '刻上名字，走远也认得出' },
+  { sku: 'ZG-BJ-01', en: 'ORNAMENT', name: '桌面摆件', desc: '把它睡着的样子留在案头' },
+  { sku: 'ZG-JN-01', en: 'MEMORIAL', name: '纪念陶罐', desc: '把想念，留在窑火里' },
+]
+
+const MOMENTS = [
   {
-    src: '/images/welcome/season-spring-cat.jpg',
-    emoji: '🐈',
-    label: '春 · 晨食',
-    title: '春 · 晨食',
+    time: '06:30',
+    title: '晨 · 第一口',
     caption: '清晨的第一口，是一天里最安稳的开场。',
-    alt: '清晨，猫咪在柘沟陶碗边吃早餐',
-    ratio: 'aspect-[4/3]',
+    sku: 'ZG-SB-07',
+    alt: '主人马克杯与猫用浅口碗同纹成对',
     offset: '',
   },
   {
-    src: '/images/welcome/season-summer-dog.jpg',
-    emoji: '🐕',
-    label: '夏 · 饮水',
-    title: '夏 · 饮水',
-    caption: '暑气正盛，清水要凉一点，碗要稳一点。',
-    alt: '夏日，狗狗在陶碗边喝水',
-    ratio: 'aspect-[4/3]',
-    offset: 'md:mt-10',
+    time: '13:00',
+    title: '午 · 一碗清水',
+    caption: '暑气正盛，水要凉一点，碗要稳一点。',
+    sku: 'ZG-SW-01',
+    alt: '流纹绞胎自动蓄水陶碗',
+    offset: 'lg:mt-12',
   },
   {
-    src: '/images/welcome/season-autumn-cat.jpg',
-    emoji: '🐈',
-    label: '秋冬 · 守候',
-    title: '秋冬 · 守候',
-    caption: '天冷了，它把下巴搁在碗边，等你回家。',
-    alt: '秋冬，猫咪趴在陶碗旁等待',
-    ratio: 'aspect-[4/3]',
+    time: '21:40',
+    title: '夜 · 等门',
+    caption: '天黑了，它把下巴搁在窝边，等你回家。',
+    sku: 'ZG-BJ-01',
+    alt: '窑变釉卧猫陶摆件',
     offset: '',
   },
 ]
 
 const CRAFTS = [
   { title: '五色陶土', desc: '青、红、黄、白、黑，天然成色' },
-  { title: '绞胎成纹', desc: '两色陶土反复揉叠，纹理入胎，一器一面' },
-  { title: '窑变无双', desc: '入窑一色，出窑万彩，无法复制' },
+  { title: '绞胎成纹', desc: '两色陶土反复揉叠，纹理长进胎骨' },
+  { title: '窑变无双', desc: '入窑一色，出窑万彩，不听人的话' },
   { title: '手工刻花', desc: '柘沟旧纹，被一刀一刀刻进器身' },
 ]
 
-function revealStyle(delay) {
-  return { animationDelay: `${delay}ms` }
+const STATS = [
+  { value: '6000 年', label: '柘沟窑火未断' },
+  { value: '5 色', label: '青红黄白黑，天然成土' },
+  { value: '1 只', label: '世上没有第二只一样的' },
+]
+
+function TickerRow({ hidden = false }) {
+  return (
+    <div className="flex shrink-0 gap-5 pr-5" aria-hidden={hidden || undefined}>
+      {TICKER.map((item) => (
+        <figure key={item.sku} className="w-32 shrink-0 sm:w-36">
+          <div className="object-stage overflow-hidden">
+            <div className="aspect-[4/5] w-full">
+              <ProductImage
+                sku={item.sku}
+                alt={item.name}
+                sizes="150px"
+                className="transition-transform duration-700 ease-silk hover:scale-[1.03]"
+              />
+            </div>
+          </div>
+          <figcaption className="mt-2 truncate text-[10px] text-ink/45">{item.name}</figcaption>
+        </figure>
+      ))}
+    </div>
+  )
 }
 
 export default function WelcomePage() {
   const location = useLocation()
-  const { token, booting } = useAuth()
+  const { token, booting, canBrowse } = useAuth()
+  const marqueeRef = useRef(null)
 
   const signedIn = Boolean(token) && !booting
   const from = location.state?.from || '/'
   const authState = { from }
-  const primaryHref = signedIn ? '/' : '/register'
+  const primaryHref = canBrowse ? '/' : '/register'
+  const primaryLabel = signedIn ? '继续为它挑选' : canBrowse ? '进入展馆' : '进去挑一只'
+
+  useEffect(() => {
+    const node = marqueeRef.current
+    if (!node || typeof IntersectionObserver === 'undefined') return undefined
+
+    const observer = new IntersectionObserver(
+      ([entry]) => node.setAttribute('data-paused', entry.isIntersecting ? 'false' : 'true'),
+      { threshold: 0.05 },
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
 
   return (
-    <div className="min-h-screen bg-cream">
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
-        <Link to={signedIn ? '/' : '/welcome'} className="flex items-center gap-3">
-          <span className="grid h-10 w-10 place-items-center rounded-lg bg-clay font-display text-xl text-cream shadow-sm">
-            陶
-          </span>
-          <span>
-            <span className="block font-display text-lg leading-tight text-ink">柘沟陶宠</span>
-            <span className="block text-[9px] tracking-[0.22em] text-ink/40">
-              ZHEGOU POTTERY PET
-            </span>
-          </span>
-        </Link>
-
-        {signedIn ? (
-          <Link to="/" className="text-xs text-clay transition hover:text-clay-dark">
-            进入首页 →
-          </Link>
-        ) : (
-          <Link
-            to="/login"
-            state={authState}
-            className="rounded-full border border-ink/15 px-4 py-1.5 text-xs text-ink/55 transition hover:border-clay hover:text-clay"
-          >
-            登录
-          </Link>
-        )}
-      </header>
+    <div className="page-canvas min-h-screen">
+      <Header variant="welcome" />
 
       {/* Hero */}
-      <section className="relative overflow-hidden">
-        <span className="pointer-events-none absolute -left-24 top-24 h-72 w-72 rounded-full border border-clay/10 bg-clay/[0.03]" />
-        <span className="pointer-events-none absolute -right-20 top-10 h-52 w-52 rounded-full border border-celadon/15" />
-
-        <div className="relative mx-auto grid max-w-6xl gap-14 px-5 pb-20 pt-6 sm:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:items-center lg:gap-10 lg:pb-28 lg:pt-10">
+      <section className="container-page pb-16 pt-12 lg:pb-24 lg:pt-20">
+        <div className="grid gap-12 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:gap-16">
           <div className="max-w-xl">
-            <span
-              className="inline-flex animate-fade-up items-center gap-2 rounded-full border border-clay/20 bg-white/60 px-3 py-1 text-[11px] tracking-wide text-clay motion-reduce:animate-none"
-              style={revealStyle(0)}
-            >
-              泗水柘沟 · 六千年窑火
-            </span>
+            <Reveal>
+              <p className="eyebrow">泗水柘沟 · 六千年窑火</p>
+            </Reveal>
 
-            <h1
-              className="mt-6 animate-fade-up font-display text-[2.15rem] leading-[1.35] text-ink motion-reduce:animate-none sm:text-5xl sm:leading-[1.3]"
-              style={revealStyle(80)}
-            >
-              六千年历史的陶土，
-              <br />
-              陪伴毛孩子的
-              <span className="text-clay">三餐四季</span>
-            </h1>
+            <Reveal delay={80}>
+              <h1 className="mt-6 text-headline text-ink">
+                六千年窑火，
+                <br />
+                盛进它的<span className="text-clay">这一只碗</span>
+              </h1>
+            </Reveal>
 
-            <p
-              className="mt-6 max-w-lg animate-fade-up text-sm leading-7 text-ink/55 motion-reduce:animate-none sm:text-[15px]"
-              style={revealStyle(160)}
-            >
-              在泗水柘沟，窑火烧了六千年。我们把青、红、黄、白、黑五种陶土，揉进一只碗、一只罐、一方窝边的器皿——让古老的手艺，参与它每一次低头与抬头。
-            </p>
+            <Reveal delay={160}>
+              <p className="mt-7 max-w-lg text-sm leading-7 text-ink/65 sm:text-[15px]">
+                青、红、黄、白、黑，五种柘沟陶土在窑火里自然成纹。每一只碗、每一只罐，都带着无法复制的纹路——像它，也像你们一起过的日子。
+              </p>
+            </Reveal>
 
-            <div
-              className="mt-8 flex animate-fade-up flex-col gap-3 motion-reduce:animate-none sm:flex-row sm:items-center"
-              style={revealStyle(240)}
-            >
-              <Link to={primaryHref} state={signedIn ? undefined : authState} className="btn-primary">
-                {signedIn ? '继续为它挑选' : '注册，开始挑选'}
-              </Link>
-              {signedIn ? null : (
-                <Link to="/login" state={authState} className="btn-ghost">
-                  已有账号，登录
+            <Reveal delay={240}>
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Link
+                  to={primaryHref}
+                  state={signedIn ? undefined : authState}
+                  className="btn-primary"
+                >
+                  {primaryLabel}
                 </Link>
-              )}
-            </div>
+                {signedIn ? (
+                  <a href="#categories" className="btn-ghost">
+                    看看五类器物
+                  </a>
+                ) : (
+                  <Link to="/login" state={authState} className="btn-ghost">
+                    已有账号，登录
+                  </Link>
+                )}
+              </div>
+            </Reveal>
 
-            <p
-              className="mt-5 animate-fade-up text-[11px] leading-5 text-ink/30 motion-reduce:animate-none"
-              style={revealStyle(320)}
-            >
-              免费注册 · 大学生创新创业项目演示站 · 不接入真实支付
-            </p>
+            <Reveal delay={320}>
+              <div className="mt-10 flex items-start gap-8 border-t border-line pt-6">
+                {STATS.map((item) => (
+                  <div key={item.label}>
+                    <p className="font-display text-base text-ink sm:text-lg">{item.value}</p>
+                    <p className="mt-1 text-[10px] leading-4 text-ink/45">{item.label}</p>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
           </div>
 
-          {/* 图片拼贴 */}
-          <div
-            className="relative mx-auto w-full max-w-md animate-fade-up pb-14 motion-reduce:animate-none lg:max-w-none lg:pb-8"
-            style={revealStyle(180)}
-          >
-            <span className="pointer-events-none absolute -right-4 top-8 hidden h-40 w-40 rotate-12 rounded-full border border-gold/20 sm:block" />
-
-            <div className="relative ml-auto w-[82%]">
-              <WelcomeImage
-                src="/images/welcome/hero-cat.jpg"
-                alt="猫咪在柘沟陶碗前低头进食"
-                emoji="🐈"
-                label="窑火与它"
-                ratio="aspect-[4/5]"
-                priority
-                className="rounded-t-[999px] rounded-b-[28px] border border-ink/10 shadow-soft"
-              />
+          <Reveal delay={180} className="relative">
+            <div className="object-stage relative ml-auto w-[92%] overflow-hidden rounded-t-[999px]">
+              <div className="aspect-[4/5] w-full">
+                <ProductImage
+                  sku="ZG-SB-01"
+                  alt="山河绞胎犬用陶瓷食盆，窗边植物旁"
+                  priority
+                  sizes="(min-width: 1024px) 44vw, 92vw"
+                  className="animate-clip-reveal"
+                />
+              </div>
             </div>
 
-            <div className="absolute -bottom-1 left-0 w-[46%] rotate-[-4deg] sm:-left-2 lg:-left-6">
-              <WelcomeImage
-                src="/images/welcome/hero-dog.jpg"
-                alt="狗狗守着它的陶制食盆"
-                emoji="🐕"
-                label="三餐四季"
-                ratio="aspect-[3/4]"
-                className="rounded-2xl border-4 border-cream shadow-card"
-              />
-            </div>
-
-            <span className="absolute -right-1 top-2 grid h-14 w-14 rotate-[8deg] place-items-center rounded-xl border border-clay/30 bg-clay font-display text-xl text-cream shadow-card sm:right-2 sm:top-4">
-              陶
-            </span>
-
-            <div className="absolute bottom-16 right-0 hidden max-w-[190px] rounded-xl border border-ink/10 bg-cream/90 px-4 py-3 shadow-card backdrop-blur-sm sm:block">
-              <p className="font-display text-xs leading-5 text-ink/65">
-                它不懂六千年，
+            <div className="absolute bottom-4 left-0 max-w-[210px] border border-line bg-cream/95 px-4 py-3 shadow-lift backdrop-blur-sm">
+              <p className="exhibit-no">NO. 001 / 035</p>
+              <p className="mt-2 font-display text-xs leading-5 text-ink">
+                山河绞胎 · 犬用陶瓷食盆
+              </p>
+              <p className="mt-1 text-[10px] leading-4 text-ink/45">
+                绞胎彩纹 · 五色陶土
                 <br />
-                只懂每天这一碗。
+                口径 18cm × 高 8cm
               </p>
             </div>
-          </div>
+
+            <span className="absolute -right-1 top-1 grid h-12 w-12 place-items-center border border-clay/30 bg-clay font-display text-lg text-paper">
+              陶
+            </span>
+          </Reveal>
         </div>
       </section>
 
-      {/* Manifesto */}
-      <section className="bg-ink">
-        <div className="mx-auto max-w-5xl px-5 py-14 text-cream sm:px-8 sm:py-16">
-          <p className="font-display text-xl leading-relaxed text-cream/90 sm:text-2xl">
-            「它不是一只碗，是它每天等你回家的理由。」
-          </p>
-
-          <div className="mt-10 grid grid-cols-3 gap-4 border-t border-cream/10 pt-8">
-            {[
-              { value: '6000 年', label: '柘沟窑火未断' },
-              { value: '5 色', label: '青红黄白黑，天然成土' },
-              { value: '1 只', label: '世上没有第二只一样的' },
-            ].map((item) => (
-              <div key={item.label}>
-                <p className="font-display text-xl text-gold sm:text-2xl">{item.value}</p>
-                <p className="mt-1.5 text-[10px] leading-4 text-cream/40 sm:text-[11px]">
-                  {item.label}
-                </p>
-              </div>
-            ))}
-          </div>
+      {/* 在窑展廊 */}
+      <section
+        ref={marqueeRef}
+        className="marquee-shell overflow-hidden border-y border-line py-6"
+        style={{
+          maskImage: 'linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)',
+          WebkitMaskImage: 'linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)',
+        }}
+      >
+        <div className="container-page mb-5 flex flex-wrap items-baseline justify-between gap-3">
+          <span className="eyebrow">IN THE KILN</span>
+          <span className="text-[11px] text-ink/45">35 件在窑 · 每一件都只有一只</span>
+        </div>
+        <div className="flex w-max animate-marquee">
+          <TickerRow />
+          <TickerRow hidden />
         </div>
       </section>
 
-      {/* 三餐四季 */}
-      <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
-        <div className="max-w-2xl">
-          <span className="text-[10px] tracking-[0.3em] text-clay/70">MEALS & SEASONS</span>
-          <h2 className="mt-3 font-display text-2xl text-ink sm:text-3xl">三餐四季，都有它在场</h2>
-          <p className="mt-3 text-sm leading-7 text-ink/50">
-            器物真正的价值，不在展柜里，而在它每天等你回家的时候。
-          </p>
-        </div>
-
-        <div className="mt-9 grid gap-6 md:grid-cols-3">
-          {SEASONS.map((season) => (
-            <article key={season.src} className={`group ${season.offset}`}>
-              <div className="overflow-hidden rounded-2xl border border-ink/10 bg-white/60 p-2 shadow-card transition duration-500 hover:-translate-y-1 hover:border-clay/25 hover:shadow-soft">
-                <div className="overflow-hidden rounded-xl">
-                  <WelcomeImage
-                    src={season.src}
-                    alt={season.alt}
-                    emoji={season.emoji}
-                    label={season.label}
-                    ratio={season.ratio}
-                    className="transition duration-700 group-hover:scale-[1.03]"
-                  />
-                </div>
-                <div className="px-3 pb-3 pt-4">
-                  <p className="text-[10px] tracking-[0.22em] text-clay/70">{season.title}</p>
-                  <p className="mt-2 font-display text-sm leading-6 text-ink/65">{season.caption}</p>
-                </div>
+      {/* 五类器物 */}
+      <section id="categories" className="container-page scroll-mt-24 section-y">
+        <Reveal>
+          <div className="flex flex-wrap items-end justify-between gap-5">
+            <div className="max-w-xl">
+              <div className="flex items-baseline gap-3">
+                <span className="exhibit-no">01</span>
+                <span className="eyebrow">FIVE KINDS</span>
               </div>
-            </article>
+              <h2 className="mt-4 text-section text-ink">五种器物，五段日常</h2>
+              <p className="mt-4 text-sm leading-7 text-ink/60">
+                从清晨的食盆到案头的摆件，器物跟着它一起，把日子过成具体的形状。
+              </p>
+            </div>
+            <Link to={primaryHref} state={signedIn ? undefined : authState} className="link-arrow">
+              查看全部 35 件
+              <IconArrowRight />
+            </Link>
+          </div>
+        </Reveal>
+
+        <div className="mt-12 grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-5">
+          {CATEGORIES.map((item, index) => (
+            <Reveal key={item.sku} delay={index * 60}>
+              <Link
+                to={primaryHref}
+                state={signedIn ? undefined : authState}
+                className="group block"
+              >
+                <div className="object-stage overflow-hidden">
+                  <div className="aspect-[3/4] w-full overflow-hidden">
+                    <ProductImage
+                      sku={item.sku}
+                      alt={item.name}
+                      sizes="(min-width: 1024px) 18vw, 44vw"
+                      className="transition-transform duration-700 ease-silk group-hover:scale-[1.04]"
+                    />
+                  </div>
+                </div>
+                <div className="mt-3 border-t border-line pt-2.5">
+                  <p className="font-mono text-micro tracking-[0.2em] text-clay/60">
+                    {String(index + 1).padStart(2, '0')} · {item.en}
+                  </p>
+                  <p className="mt-2 font-display text-base text-ink transition group-hover:text-clay">
+                    {item.name}
+                  </p>
+                  <p className="mt-1 text-[11px] leading-5 text-ink/45">{item.desc}</p>
+                </div>
+              </Link>
+            </Reveal>
           ))}
         </div>
       </section>
 
-      {/* 手艺来源 */}
-      <section className="border-y border-ink/5 bg-sand/45">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-2 lg:items-center">
-          <div className="relative">
-            <WelcomeImage
-              src="/images/welcome/craft-hands.jpg"
-              alt="匠人双手在拉坯机上制作陶器"
-              emoji="🏺"
-              label="柘沟窑火"
-              ratio="aspect-[3/2]"
-              className="rounded-[28px] border border-ink/10 shadow-soft"
-            />
-            <span className="absolute -bottom-4 -right-3 hidden rounded-full border border-clay/20 bg-cream px-4 py-2 font-display text-xs text-clay shadow-card sm:block">
-              入窑一色 · 出窑万彩
-            </span>
-          </div>
-
+      {/* 宣言 */}
+      <section className="grain bg-ink text-paper">
+        <div className="container-page grid items-center gap-12 py-section-sm lg:grid-cols-[1.25fr_0.75fr]">
           <div>
-            <span className="text-[10px] tracking-[0.3em] text-clay/70">FROM THE KILN</span>
-            <h2 className="mt-3 font-display text-2xl text-ink sm:text-3xl">
-              从柘沟的窑火，到你家的地板
-            </h2>
-            <p className="mt-4 text-sm leading-7 text-ink/55">
-              柘沟土陶从大汶口文化一路烧到今天。五色陶土不施化学釉，绞胎让纹理长进胎骨，窑变让每一只都不听人的话——所以，每一只都只属于一个它。
+            <p className="text-balance text-section leading-[1.25] text-paper">
+              「它不是一只碗，
+              <br />
+              是它每天等你回家的理由。」
             </p>
 
-            <div className="mt-7 grid gap-x-6 gap-y-4 sm:grid-cols-2">
-              {CRAFTS.map((craft) => (
-                <div key={craft.title} className="border-t border-ink/10 pt-3">
-                  <p className="font-display text-sm text-ink/75">{craft.title}</p>
-                  <p className="mt-1 text-[11px] leading-5 text-ink/40">{craft.desc}</p>
+            <div className="mt-12 grid grid-cols-3 gap-6 border-t border-paper/15 pt-8">
+              {STATS.map((item) => (
+                <div key={item.label}>
+                  <p className="font-display text-xl text-gold sm:text-2xl">{item.value}</p>
+                  <p className="mt-2 text-[10px] leading-4 text-paper/45 sm:text-[11px]">{item.label}</p>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* 结尾 CTA */}
-      <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
-        <div className="relative overflow-hidden rounded-[28px] bg-ink px-6 py-12 text-center text-cream sm:px-12 sm:py-16">
-          <span className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full border border-cream/10" />
-          <span className="pointer-events-none absolute -bottom-20 -left-12 h-52 w-52 rounded-full border border-gold/15" />
-
-          <p className="relative font-display text-2xl leading-relaxed sm:text-3xl">
-            它的一生不长，
-            <br className="sm:hidden" />
-            值得一只认真做过的碗。
-          </p>
-          <p className="relative mx-auto mt-4 max-w-md text-xs leading-6 text-cream/45 sm:text-sm">
-            {signedIn
-              ? '继续为它挑选一只柘沟陶器，或回到首页看看今天的新纹样。'
-              : '注册后即可为它挑选、收藏，并体验 AI 语义搜索。'}
-          </p>
-
-          <div className="relative mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link
-              to={primaryHref}
-              state={signedIn ? undefined : authState}
-              className="btn-primary w-full sm:w-auto"
-            >
-              {signedIn ? '继续为它挑选' : '为它注册'}
-            </Link>
-            {signedIn ? null : (
-              <Link
-                to="/login"
-                state={authState}
-                className="inline-flex w-full items-center justify-center rounded-full border border-cream/25 px-6 py-2.5 text-sm text-cream/75 transition hover:border-gold hover:text-gold sm:w-auto"
-              >
-                我已有账号
-              </Link>
-            )}
+          <div>
+            <div className="object-stage overflow-hidden">
+              <div className="aspect-[5/4] w-full">
+                <ProductImage
+                  sku="ZG-JN-01"
+                  alt="窑变星河宠物纪念罐，烛光旁"
+                  sizes="(min-width: 1024px) 34vw, 92vw"
+                />
+              </div>
+            </div>
+            <p className="mt-3 text-micro tracking-[0.2em] text-paper/40">
+              窑变星河 · 可刻名字与日期
+            </p>
           </div>
         </div>
       </section>
 
-      <footer className="border-t border-ink/10">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-7 text-[10px] leading-5 text-ink/35 sm:flex-row sm:items-center sm:justify-between sm:px-8">
-          <p>柘沟陶宠 · 泗水柘沟 · 大汶口文化 · 非遗土陶</p>
-          <p>大学生创新创业项目演示站 · 商品与数据均为演示内容</p>
+      {/* 三个时刻 */}
+      <section id="moments" className="container-page scroll-mt-24 section-y">
+        <Reveal>
+          <div className="max-w-2xl">
+            <div className="flex items-baseline gap-3">
+              <span className="exhibit-no">02</span>
+              <span className="eyebrow">A DAY WITH IT</span>
+            </div>
+            <h2 className="mt-4 text-section text-ink">一天里的三个时刻</h2>
+            <p className="mt-4 text-sm leading-7 text-ink/60">
+              器物真正的价值，不在展柜里，而在它每天等你回家的时候。
+            </p>
+          </div>
+        </Reveal>
+
+        <div className="mt-12 grid gap-x-8 gap-y-12 md:grid-cols-3">
+          {MOMENTS.map((moment, index) => (
+            <Reveal key={moment.sku} delay={index * 80} className={moment.offset}>
+              <article className="group">
+                <div className="relative object-stage overflow-hidden">
+                  <div className="aspect-[4/5] w-full overflow-hidden">
+                    <ProductImage
+                      sku={moment.sku}
+                      alt={moment.alt}
+                      sizes="(min-width: 768px) 30vw, 92vw"
+                      className="transition-transform duration-700 ease-silk group-hover:scale-[1.03]"
+                    />
+                  </div>
+                  <span className="absolute left-4 top-4 font-mono text-sm tracking-[0.14em] text-ink/70">
+                    {moment.time}
+                  </span>
+                </div>
+                <div className="mt-4 border-t border-line pt-3">
+                  <p className="text-[10px] tracking-[0.22em] text-clay/70">{moment.title}</p>
+                  <p className="mt-2 font-display text-sm leading-6 text-ink/75">{moment.caption}</p>
+                </div>
+              </article>
+            </Reveal>
+          ))}
         </div>
-      </footer>
+      </section>
+
+      {/* 手艺 */}
+      <section id="craft" className="scroll-mt-24 border-y border-line bg-sand/40">
+        <div className="container-page grid items-center gap-14 py-section-sm lg:grid-cols-[0.95fr_1.05fr]">
+          <Reveal className="relative pb-8">
+            <div className="object-stage overflow-hidden">
+              <div className="aspect-[4/3] w-full">
+                <ProductImage
+                  sku="ZG-GP-01"
+                  alt="手刻骨朵纹宠物名牌，亚麻布与皮绳"
+                  sizes="(min-width: 1024px) 42vw, 92vw"
+                />
+              </div>
+            </div>
+
+            <div className="absolute -bottom-2 right-0 w-[44%] border-4 border-cream shadow-card">
+              <div className="aspect-square w-full overflow-hidden">
+                <ProductImage sku="ZG-SB-02" alt="云岚五色猫用浅口饭盆" sizes="18vw" />
+              </div>
+            </div>
+
+            <span className="absolute -top-3 left-5 border border-line bg-cream px-3 py-1 text-micro tracking-[0.16em] text-clay">
+              入窑一色 · 出窑万彩
+            </span>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <div className="flex items-baseline gap-3">
+              <span className="exhibit-no">03</span>
+              <span className="eyebrow">FROM THE KILN</span>
+            </div>
+            <h2 className="mt-4 text-section text-ink">从柘沟的窑火，到你家的地板</h2>
+            <p className="mt-5 max-w-reading text-sm leading-7 text-ink/65">
+              柘沟土陶从大汶口文化一路烧到今天。五色陶土不施化学釉，绞胎让纹理长进胎骨，窑变让每一只都不听人的话——所以，每一只都只属于一个它。
+            </p>
+
+            <div className="mt-9 grid gap-x-8 gap-y-6 sm:grid-cols-2">
+              {CRAFTS.map((craft, index) => (
+                <div key={craft.title} className="border-t border-line pt-4">
+                  <p className="flex items-baseline gap-2.5 font-display text-sm text-ink">
+                    <span className="font-mono text-micro tracking-[0.2em] text-clay/60">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    {craft.title}
+                  </p>
+                  <p className="mt-1.5 text-[11px] leading-5 text-ink/50">{craft.desc}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* 结尾 CTA */}
+      <section className="container-page section-y">
+        <Reveal className="grid overflow-hidden border border-line bg-ink text-paper lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="px-8 py-14 sm:px-14">
+            <p className="text-balance font-display text-[2rem] leading-[1.3] text-paper sm:text-[2.5rem]">
+              它的一生不长，
+              <br />
+              值得一只认真做过的碗。
+            </p>
+            <p className="mt-5 max-w-md text-xs leading-6 text-paper/50 sm:text-sm">
+              {signedIn
+                ? '继续为它挑选一只柘沟陶器，或回到首页看看今天的新纹样。'
+                : canBrowse
+                  ? '可直接进入展馆浏览；登录后可保存购物车与订单。'
+                  : '注册后即可为它挑选、收藏，并体验 AI 语义搜索。'}
+            </p>
+
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <Link
+                to={primaryHref}
+                state={signedIn ? undefined : authState}
+                className="inline-flex w-full items-center justify-center gap-2 bg-clay px-7 py-3 text-sm font-medium text-paper transition duration-300 ease-silk hover:bg-clay-dark sm:w-auto"
+              >
+                {primaryLabel}
+              </Link>
+              {signedIn ? null : (
+                <Link
+                  to="/login"
+                  state={authState}
+                  className="inline-flex w-full items-center justify-center border border-paper/25 px-6 py-3 text-sm text-paper/75 transition duration-300 ease-silk hover:border-gold hover:text-gold sm:w-auto"
+                >
+                  我已有账号
+                </Link>
+              )}
+            </div>
+          </div>
+
+          <div className="relative min-h-[240px] lg:min-h-0">
+            <div className="absolute inset-0">
+              <ProductImage
+                sku="ZG-SB-07"
+                alt="同纹主人杯与猫用浅口碗"
+                sizes="(min-width: 1024px) 40vw, 92vw"
+              />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-ink/10 lg:bg-gradient-to-r lg:from-ink lg:via-ink/25 lg:to-transparent" />
+          </div>
+        </Reveal>
+      </section>
+
+      <SiteFooter />
+      <AssistantWidget />
     </div>
   )
 }

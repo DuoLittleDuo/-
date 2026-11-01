@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import * as authApi from '../api/auth'
 import { TOKEN_KEY, USER_KEY } from '../api/client'
+import { DEMO_MODE } from '../config/runtime'
 
 const AuthContext = createContext(null)
 
@@ -76,17 +77,23 @@ export function AuthProvider({ children }) {
     [storeSession],
   )
 
+  // 演示模式下的访客：没有 token，但允许浏览整站（商品走本地数据）
+  const isDemoGuest = DEMO_MODE && !token && !booting
+  const canBrowse = Boolean(token) || isDemoGuest
+
   const value = useMemo(
     () => ({
       token,
       user,
       booting,
+      isDemoGuest,
+      canBrowse,
       isAuthenticated: Boolean(token && user),
       login,
       register,
       logout,
     }),
-    [token, user, booting, login, register, logout],
+    [token, user, booting, isDemoGuest, canBrowse, login, register, logout],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

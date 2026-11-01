@@ -5,47 +5,50 @@ export default function Pagination({ page, pages, onChange }) {
   const end = Math.min(pages, start + 4)
   const numbers = Array.from({ length: end - start + 1 }, (_, index) => start + index)
 
-  const buttonClass =
-    'grid h-9 min-w-9 place-items-center rounded-full border border-ink/12 bg-white/70 px-3 text-sm text-ink/60 transition hover:border-clay/40 hover:text-clay disabled:cursor-not-allowed disabled:opacity-35'
+  const baseClass =
+    'min-w-8 border-b px-2 pb-0.5 font-mono text-sm transition duration-300 ease-silk disabled:cursor-not-allowed disabled:opacity-30'
 
   return (
-    <div className="mt-10 flex items-center justify-center gap-2">
+    <nav className="mt-14 flex items-center justify-between border-t border-line pt-6">
       <button
         type="button"
-        className={buttonClass}
+        className={`${baseClass} border-transparent text-ink/55 hover:text-clay`}
         disabled={page <= 1}
         onClick={() => onChange(page - 1)}
       >
         上一页
       </button>
 
-      {start > 1 ? <span className="px-1 text-ink/30">…</span> : null}
+      <div className="flex items-center gap-5">
+        {start > 1 ? <span className="text-ink/25">…</span> : null}
 
-      {numbers.map((number) => (
-        <button
-          key={number}
-          type="button"
-          onClick={() => onChange(number)}
-          className={`grid h-9 min-w-9 place-items-center rounded-full border px-3 text-sm transition ${
-            number === page
-              ? 'border-clay bg-clay text-cream'
-              : 'border-ink/12 bg-white/70 text-ink/60 hover:border-clay/40 hover:text-clay'
-          }`}
-        >
-          {number}
-        </button>
-      ))}
+        {numbers.map((number) => (
+          <button
+            key={number}
+            type="button"
+            onClick={() => onChange(number)}
+            aria-current={number === page ? 'page' : undefined}
+            className={`${baseClass} ${
+              number === page
+                ? 'border-clay text-clay'
+                : 'border-transparent text-ink/50 hover:text-clay'
+            }`}
+          >
+            {String(number).padStart(2, '0')}
+          </button>
+        ))}
 
-      {end < pages ? <span className="px-1 text-ink/30">…</span> : null}
+        {end < pages ? <span className="text-ink/25">…</span> : null}
+      </div>
 
       <button
         type="button"
-        className={buttonClass}
+        className={`${baseClass} border-transparent text-ink/55 hover:text-clay`}
         disabled={page >= pages}
         onClick={() => onChange(page + 1)}
       >
         下一页
       </button>
-    </div>
+    </nav>
   )
 }

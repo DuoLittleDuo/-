@@ -5,14 +5,14 @@ import { useAuth } from './AuthContext'
 const FavoritesContext = createContext(null)
 
 export function FavoritesProvider({ children }) {
-  const { token } = useAuth()
+  const { token, canBrowse } = useAuth()
   const [ids, setIds] = useState(() => new Set())
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     let active = true
 
-    if (!token) {
+    if (!canBrowse) {
       setIds(new Set())
       return undefined
     }
@@ -33,7 +33,7 @@ export function FavoritesProvider({ children }) {
     return () => {
       active = false
     }
-  }, [token])
+  }, [canBrowse, token])
 
   const isFavorite = useCallback((productId) => ids.has(productId), [ids])
 

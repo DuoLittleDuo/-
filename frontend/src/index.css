@@ -7,11 +7,17 @@
     @apply bg-cream text-ink antialiased;
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   body {
     @apply min-h-screen font-body;
     background-image:
-      radial-gradient(circle at 12% 8%, rgba(184, 92, 56, 0.05), transparent 32%),
-      radial-gradient(circle at 88% 2%, rgba(127, 147, 129, 0.06), transparent 28%);
+      radial-gradient(900px 480px at 8% -6%, rgba(168, 81, 50, 0.06), transparent 60%),
+      radial-gradient(760px 420px at 92% -2%, rgba(176, 138, 79, 0.07), transparent 58%);
   }
 
   h1,
@@ -23,26 +29,169 @@
   ::selection {
     @apply bg-clay/20;
   }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-clay/50 ring-offset-2 ring-offset-cream;
+  }
+}
+
+/* 在窑展廊：无缝横向滚动。两段内容等宽，位移 -50% 即回到起点。 */
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@layer utilities {
+  .animate-marquee {
+    animation: marquee 60s linear infinite;
+    will-change: transform;
+  }
+
+  .marquee-shell:hover .animate-marquee {
+    animation-play-state: paused;
+  }
+
+  .marquee-shell[data-paused='true'] .animate-marquee {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-marquee {
+      animation: none;
+    }
+  }
+
+  /* 介绍页画布：奶油底色上叠三团大面积暖光 */
+  .page-canvas {
+    background-color: #faf5ec;
+    background-image:
+      radial-gradient(1100px 540px at 4% -8%, rgba(168, 81, 50, 0.13), transparent 62%),
+      radial-gradient(860px 480px at 98% -4%, rgba(176, 138, 79, 0.15), transparent 58%),
+      radial-gradient(1000px 640px at 46% 103%, rgba(91, 112, 98, 0.10), transparent 64%);
+  }
+
+  /* 局部纸纹颗粒：只覆盖指定区块，不压在所有图片和文字上 */
+  .grain {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.07;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+  }
+
+  /* 展台：让器物像被单独打光 */
+  .object-stage {
+    background:
+      radial-gradient(120% 100% at 50% 0%, #fffcf6 0%, #f7efe4 56%, #efe3d2 100%);
+  }
+
+  /* 长文阅读宽度 */
+  .reading {
+    @apply max-w-reading;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-page px-gutter;
+  }
+
+  .section-y {
+    @apply py-section;
+  }
+
+  .section-y-sm {
+    @apply py-section-sm;
+  }
+
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-clay px-6 py-2.5 text-sm font-medium text-cream transition hover:bg-clay-dark disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2 rounded-exhibit bg-clay px-7 py-3 text-sm font-medium tracking-wide text-paper transition duration-300 ease-silk hover:bg-clay-dark disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-ink/15 px-4 py-2 text-sm text-ink/70 transition hover:border-clay hover:text-clay;
+    @apply inline-flex items-center justify-center gap-2 rounded-exhibit border border-line px-6 py-3 text-sm text-ink transition duration-300 ease-silk hover:border-ink hover:text-clay disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-quiet {
+    @apply inline-flex items-center gap-1.5 border-b border-ink/30 pb-0.5 text-sm text-ink transition duration-300 ease-silk hover:border-clay hover:text-clay;
   }
 
   .input-base {
-    @apply w-full rounded-xl border border-ink/15 bg-white/80 px-4 py-3 text-sm text-ink outline-none transition placeholder:text-ink/30 focus:border-clay focus:ring-2 focus:ring-clay/15;
+    @apply w-full rounded-exhibit border border-line bg-paper px-4 py-3 text-sm text-ink outline-none transition duration-300 placeholder:text-ink/35 focus:border-clay focus:ring-1 focus:ring-clay/25;
+  }
+
+  .input-editorial {
+    @apply w-full border-0 border-b border-ink/25 bg-transparent px-0 py-3 text-lg text-ink outline-none transition duration-300 placeholder:text-ink/30 focus:border-clay focus:ring-0;
   }
 
   .card {
-    @apply overflow-hidden rounded-2xl border border-ink/10 bg-white/70 shadow-card transition duration-300;
+    @apply overflow-hidden rounded-frame border border-line bg-paper/80 transition duration-300 ease-silk;
   }
 
   .tag-pill {
-    @apply rounded-full bg-sand px-2.5 py-1 text-[11px] text-ink/55;
+    @apply inline-flex items-center rounded-exhibit border border-line px-2.5 py-1 text-[11px] tracking-wide text-ink/60;
+  }
+
+  .eyebrow {
+    @apply text-label uppercase text-ink/55;
+  }
+
+  .exhibit-no {
+    @apply font-mono text-micro tracking-[0.2em] text-clay/80;
+  }
+
+  .rule {
+    @apply border-t border-line;
+  }
+
+  .link-arrow {
+    @apply inline-flex items-center gap-2 text-sm text-ink/70 transition duration-300 ease-silk hover:text-clay;
+  }
+
+  .link-arrow svg {
+    @apply transition-transform duration-300 ease-silk;
+  }
+
+  .link-arrow:hover svg {
+    @apply translate-x-1;
+  }
+
+  .skeleton {
+    @apply rounded-frame bg-sand/70;
+    background-image: linear-gradient(
+      90deg,
+      rgba(239, 227, 210, 0.35) 0%,
+      rgba(255, 252, 246, 0.9) 50%,
+      rgba(239, 227, 210, 0.35) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.8s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton {
+      animation: none;
+    }
   }
 }

@@ -5,6 +5,7 @@ import { cancelOrder, completeOrder, getOrder, payOrder } from '../api/orders'
 import EmptyState from '../components/EmptyState'
 import OrderStatusBadge from '../components/OrderStatusBadge'
 import PetLetterModal from '../components/PetLetterModal'
+import ProductImage from '../components/ProductImage'
 import Spinner from '../components/Spinner'
 import { formatDateTime } from '../utils/format'
 
@@ -97,23 +98,23 @@ export default function OrderDetailPage() {
       </nav>
 
       {justCreated && order.status === 'pending' ? (
-        <div className="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-celadon/20 bg-celadon/10 px-4 py-3 text-sm text-celadon">
+        <div className="mt-4 flex flex-wrap items-center gap-2 rounded-frame border border-celadon/20 bg-celadon/10 px-4 py-3 text-sm text-celadon">
           <span className="text-base">✓</span>
           下单成功。演示站不接入真实支付，可在下方点击「模拟支付」继续流程。
         </div>
       ) : null}
 
       {justCreated && order.status !== 'pending' ? (
-        <div className="mt-4 rounded-xl border border-celadon/20 bg-celadon/10 px-4 py-3 text-sm text-celadon">
+        <div className="mt-4 rounded-frame border border-celadon/20 bg-celadon/10 px-4 py-3 text-sm text-celadon">
           下单成功，订单状态已更新。
         </div>
       ) : null}
 
       {error ? (
-        <div className="mt-4 rounded-xl bg-clay/10 px-4 py-3 text-sm text-clay">{error}</div>
+        <div className="mt-4 rounded-frame bg-clay/10 px-4 py-3 text-sm text-clay">{error}</div>
       ) : null}
 
-      <section className="mt-5 rounded-2xl border border-ink/10 bg-white/70 p-5 sm:p-6">
+      <section className="mt-5 rounded-frame border border-line bg-paper/60 p-5 sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-[11px] tracking-wide text-ink/35">订单号 {order.order_no}</p>
@@ -124,7 +125,7 @@ export default function OrderDetailPage() {
         </div>
 
         {order.status === 'cancelled' ? (
-          <div className="mt-5 rounded-xl border border-ink/10 bg-ink/5 px-4 py-3 text-sm text-ink/50">
+          <div className="mt-5 rounded-frame border border-line bg-ink/5 px-4 py-3 text-sm text-ink/50">
             该订单已于 {formatDateTime(order.cancelled_at)} 取消，库存已恢复。
           </div>
         ) : (
@@ -132,10 +133,10 @@ export default function OrderDetailPage() {
             {steps.map((step, index) => (
               <div
                 key={step.label}
-                className={`rounded-xl border px-4 py-3 ${
+                className={`rounded-frame border px-4 py-3 ${
                   step.done
                     ? 'border-clay/20 bg-clay/5'
-                    : 'border-ink/8 bg-white/40'
+                    : 'border-line bg-paper/40'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -161,16 +162,13 @@ export default function OrderDetailPage() {
 
       <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_340px]">
         <div className="space-y-5">
-          <section className="rounded-2xl border border-ink/10 bg-white/70 p-5">
+          <section className="rounded-frame border border-line bg-paper/60 p-5">
             <h2 className="font-display text-lg text-ink">商品清单</h2>
-            <div className="mt-4 divide-y divide-ink/5">
+            <div className="mt-4 divide-y divide-line">
               {order.items.map((item) => (
                 <div key={item.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-                  <div
-                    className="grid h-14 w-14 shrink-0 place-items-center rounded-xl text-2xl"
-                    style={{ backgroundColor: `${item.theme_color || '#B85C38'}18` }}
-                  >
-                    {item.cover_emoji || '🏺'}
+                  <div className="h-14 w-14 shrink-0 overflow-hidden">
+                    <ProductImage sku={item.sku} alt={item.product_name} sizes="56px" />
                   </div>
                   <div className="min-w-0 flex-1">
                     {item.product_id ? (
@@ -193,7 +191,7 @@ export default function OrderDetailPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-ink/10 bg-white/70 p-5">
+          <section className="rounded-frame border border-line bg-paper/60 p-5">
             <h2 className="font-display text-lg text-ink">收货信息</h2>
             <dl className="mt-4 space-y-2 text-xs">
               <div className="flex gap-3">
@@ -218,7 +216,7 @@ export default function OrderDetailPage() {
           </section>
         </div>
 
-        <aside className="h-fit rounded-2xl border border-ink/10 bg-white/70 p-5 lg:sticky lg:top-24">
+        <aside className="h-fit rounded-frame border border-line bg-paper/60 p-5 lg:sticky lg:top-24">
           <h2 className="font-display text-lg text-ink">金额</h2>
           <div className="mt-4 space-y-2 text-xs text-ink/50">
             <div className="flex justify-between">
@@ -235,7 +233,7 @@ export default function OrderDetailPage() {
             </div>
           </div>
 
-          <div className="mt-4 flex items-end justify-between border-t border-ink/10 pt-4">
+          <div className="mt-4 flex items-end justify-between border-t border-line pt-4">
             <span className="text-xs text-ink/45">应付</span>
             <span className="text-clay">
               <span className="text-xs">¥</span>

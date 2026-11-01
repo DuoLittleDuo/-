@@ -1,4 +1,5 @@
 import { useFavorites } from '../context/FavoritesContext'
+import { IconHeart } from './icons'
 
 export default function FavoriteButton({ productId, className = '' }) {
   const { isFavorite, toggle, loading } = useFavorites()
@@ -21,23 +22,13 @@ export default function FavoriteButton({ productId, className = '' }) {
       disabled={loading}
       aria-label={active ? '取消收藏' : '收藏'}
       title={active ? '取消收藏' : '收藏'}
-      className={`grid h-9 w-9 place-items-center rounded-full border backdrop-blur transition disabled:cursor-wait disabled:opacity-50 ${
+      className={`grid h-9 w-9 place-items-center border backdrop-blur transition duration-300 ease-silk disabled:cursor-wait disabled:opacity-50 ${
         active
-          ? 'border-clay/30 bg-clay text-cream shadow-sm'
-          : 'border-white/70 bg-white/80 text-ink/45 hover:text-clay'
+          ? 'border-clay bg-clay text-paper'
+          : 'border-line bg-paper/80 text-ink/50 hover:border-clay/50 hover:text-clay'
       } ${className}`}
     >
-      <svg
-        viewBox="0 0 24 24"
-        className="h-4 w-4"
-        fill={active ? 'currentColor' : 'none'}
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" />
-      </svg>
+      <IconHeart className="h-4 w-4" filled={active} />
     </button>
   )
 }

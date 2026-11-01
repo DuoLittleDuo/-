@@ -71,7 +71,7 @@ export default function FavoritesPage() {
       {loading ? (
         <Spinner label="正在整理收藏" />
       ) : error ? (
-        <div className="mt-10 rounded-xl bg-clay/10 px-4 py-3 text-sm text-clay">{error}</div>
+        <div className="mt-10 rounded-frame bg-clay/10 px-4 py-3 text-sm text-clay">{error}</div>
       ) : !data || data.items.length === 0 ? (
         <div className="mt-8">
           <EmptyState

@@ -27,6 +27,15 @@ frontend/e2e/failure.png
 *.mp4
 *.zip
 泗水柘沟土陶_宠物产品单图(1)/
+泗水柘沟土陶_宠物产品单图-4/
+产品图库_SKU/
+generated_product_images/
+
+# 本地智能体（体积大、含密钥与模型文件，另行建仓）
+智能体/
+
+# 本地截图与临时产物
+frontend/e2e/_*.png
 
 # 编辑器
 .vscode/

@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { errorMessage } from '../api/client'
+import ProductImage from '../components/ProductImage'
+import { DEMO_MODE } from '../config/runtime'
 import { useAuth } from '../context/AuthContext'
 
 const DEMO_ACCOUNT = { username: 'demo', password: 'demo123456' }
@@ -70,20 +72,21 @@ export default function AuthPage() {
   }
 
   const tabClass = (active) =>
-    `flex-1 rounded-full py-2 text-center text-sm transition ${
-      active ? 'bg-white text-clay shadow-sm' : 'text-ink/45 hover:text-ink/70'
+    `flex-1 border-b-2 pb-3 text-center text-sm transition duration-300 ease-silk ${
+      active ? 'border-clay text-clay' : 'border-transparent text-ink/45 hover:text-ink/70'
     }`
 
   return (
     <div className="min-h-screen bg-cream lg:grid lg:grid-cols-[1.05fr_1fr]">
       <aside className="relative hidden overflow-hidden bg-ink px-12 py-14 text-cream lg:flex lg:flex-col lg:justify-between">
-        <span className="pointer-events-none absolute -right-24 top-10 h-72 w-72 rounded-full border border-cream/10 bg-clay/10" />
-        <span className="pointer-events-none absolute -bottom-20 -left-16 h-64 w-64 rounded-full border border-cream/10 bg-celadon/10" />
-        <span className="pointer-events-none absolute right-16 bottom-24 h-28 w-28 rounded-full border border-gold/20" />
+        <div className="absolute inset-0">
+          <ProductImage sku="ZG-BJ-01" alt="窑变釉卧猫陶摆件" sizes="50vw" className="opacity-45" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/75 to-ink/25" />
 
         <div className="relative">
           <div className="flex items-center gap-3">
-            <span className="grid h-12 w-12 place-items-center rounded-lg bg-clay font-display text-2xl">
+            <span className="grid h-12 w-12 place-items-center rounded-frame bg-clay font-display text-2xl">
               陶
             </span>
             <div>
@@ -107,7 +110,7 @@ export default function AuthPage() {
               { value: '35', label: '手作商品' },
               { value: 'AI', label: '语义检索' },
             ].map((item) => (
-              <div key={item.label} className="rounded-xl border border-cream/10 bg-cream/5 py-4">
+              <div key={item.label} className="rounded-frame border border-cream/10 bg-cream/5 py-4">
                 <p className="font-display text-2xl text-gold">{item.value}</p>
                 <p className="mt-1 text-[10px] tracking-wide text-cream/40">{item.label}</p>
               </div>
@@ -121,7 +124,7 @@ export default function AuthPage() {
       <main className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-8">
         <div className="w-full max-w-md">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
-            <span className="grid h-10 w-10 place-items-center rounded-lg bg-clay font-display text-xl text-cream">
+            <span className="grid h-10 w-10 place-items-center rounded-frame bg-clay font-display text-xl text-cream">
               陶
             </span>
             <div>
@@ -130,8 +133,8 @@ export default function AuthPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-ink/10 bg-white/80 p-6 shadow-soft sm:p-8">
-            <div className="flex rounded-full bg-sand/70 p-1">
+          <div className="border border-line bg-paper/75 p-6 sm:p-8">
+            <div className="flex gap-6">
               <Link to="/login" className={tabClass(!isRegister)}>
                 登录
               </Link>
@@ -201,7 +204,7 @@ export default function AuthPage() {
               ) : null}
 
               {error ? (
-                <p className="rounded-lg bg-clay/10 px-3 py-2 text-xs leading-5 text-clay">
+                <p className="rounded-frame bg-clay/10 px-3 py-2 text-xs leading-5 text-clay">
                   {error}
                 </p>
               ) : null}
@@ -215,10 +218,19 @@ export default function AuthPage() {
               <button
                 type="button"
                 onClick={fillDemo}
-                className="mt-4 w-full text-center text-xs text-ink/35 transition hover:text-clay"
+                className="mt-4 w-full text-center text-xs text-ink/40 transition hover:text-clay"
               >
                 填入演示账号：demo / demo123456
               </button>
+            ) : null}
+
+            {DEMO_MODE ? (
+              <Link
+                to="/"
+                className="mt-6 block border-t border-line pt-5 text-center text-xs text-ink/55 transition duration-300 ease-silk hover:text-clay"
+              >
+                以访客身份进入展馆 →
+              </Link>
             ) : null}
           </div>
 

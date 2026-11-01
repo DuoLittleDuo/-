@@ -1,36 +1,36 @@
-import { useEffect, useState } from 'react'
+import ProductImage from './ProductImage'
 
+/**
+ * 商品图片位：有 sku/图片时走统一图片管线（WebP + 原图回退），
+ * 否则退到主题色 + emoji 的抽象构图。
+ */
 export default function ProductVisual({
   product,
   className = '',
   size = 'text-6xl',
   showBadge = true,
+  sizes = '(min-width: 1280px) 28vw, (min-width: 768px) 44vw, 90vw',
 }) {
-  const color = product?.theme_color || '#B85C38'
-  const imageSrc =
-    product?.image_url || (product?.sku ? `/images/products/${product.sku}.jpg` : '')
-  const [imageFailed, setImageFailed] = useState(false)
+  const color = product?.theme_color || '#A85132'
+  const sku = product?.sku
+  const src = product?.image_url || undefined
 
-  useEffect(() => {
-    setImageFailed(false)
-  }, [imageSrc])
-
-  if (imageSrc && !imageFailed) {
+  if (sku || src) {
     return (
-      <img
-        src={imageSrc}
-        alt={product?.name || '柘沟陶宠商品'}
-        onError={() => setImageFailed(true)}
-        loading="lazy"
-        decoding="async"
-        className={`aspect-square w-full bg-sand/30 object-contain ${className}`}
-      />
+      <div className={`object-stage aspect-square w-full overflow-hidden ${className}`}>
+        <ProductImage
+          sku={sku}
+          src={src}
+          alt={product?.name || '柘沟陶宠商品'}
+          sizes={sizes}
+        />
+      </div>
     )
   }
 
   return (
     <div
-      className={`relative aspect-[4/3] w-full overflow-hidden ${className}`}
+      className={`relative aspect-square w-full overflow-hidden ${className}`}
       style={{
         background: `radial-gradient(circle at 30% 22%, ${color}24, ${color}10 52%, #F5EBDD 100%)`,
       }}

@@ -5,7 +5,7 @@ import { useAuth } from './AuthContext'
 const CartContext = createContext(null)
 
 export function CartProvider({ children }) {
-  const { token } = useAuth()
+  const { token, canBrowse } = useAuth()
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -15,7 +15,7 @@ export function CartProvider({ children }) {
   }, [])
 
   const refresh = useCallback(async () => {
-    if (!token) {
+    if (!canBrowse) {
       setItems([])
       return null
     }
@@ -31,16 +31,16 @@ export function CartProvider({ children }) {
     } finally {
       setLoading(false)
     }
-  }, [token, applyCart])
+  }, [canBrowse, applyCart])
 
   useEffect(() => {
-    if (!token) {
+    if (!canBrowse) {
       setItems([])
       setError('')
       return
     }
     refresh().catch(() => {})
-  }, [token, refresh])
+  }, [canBrowse, token, refresh])
 
   const add = useCallback(
     async (productId, quantity = 1) => {
