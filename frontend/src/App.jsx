@@ -16,6 +16,7 @@ import OrdersPage from './pages/OrdersPage'
 import ProductDetailPage from './pages/ProductDetailPage'
 import SearchResultsPage from './pages/SearchResultsPage'
 import WelcomePage from './pages/WelcomePage'
+import YaoyaoPage from './pages/YaoyaoPage'
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/welcome" element={<WelcomePage />} />
+              <Route path="/yaoyao" element={<YaoyaoPage />} />
 
               <Route element={<GuestRoute />}>
                 <Route path="/login" element={<AuthPage />} />

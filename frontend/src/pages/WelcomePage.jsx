@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import AssistantWidget from '../components/AssistantWidget'
+import FloatingYaoyao from '../components/FloatingYaoyao'
 import Header from '../components/Header'
 import ProductImage from '../components/ProductImage'
 import Reveal from '../components/Reveal'
@@ -458,7 +458,7 @@ export default function WelcomePage() {
       </section>
 
       <SiteFooter />
-      <AssistantWidget />
+      <FloatingYaoyao />
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom'
-import AssistantWidget from './AssistantWidget'
+import FloatingYaoyao from './FloatingYaoyao'
 import Header from './Header'
 import SiteFooter from './SiteFooter'
 
@@ -11,7 +11,7 @@ export default function AppLayout() {
         <Outlet />
       </main>
       <SiteFooter />
-      <AssistantWidget />
+      <FloatingYaoyao />
     </div>
   )
 }

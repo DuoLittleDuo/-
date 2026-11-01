@@ -103,12 +103,63 @@
     @apply max-w-reading;
   }
 
+  /* 垚垚 3D：情绪飘浮的表情与加载占位 */
+  .yaoyao-fx-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .yaoyao-fx {
+    position: absolute;
+    line-height: 1;
+    color: rgba(168, 81, 50, 0.85);
+    opacity: 0;
+    user-select: none;
+    text-shadow: 0 2px 10px rgba(255, 252, 246, 0.9);
+    animation: yaoyao-fx-float 1.6s ease-out forwards;
+  }
+
+  .yaoyao-pet-shadow {
+    width: 54px;
+    height: 54px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(168, 81, 50, 0.16), transparent 70%);
+    animation: yaoyao-pulse 2.4s ease-in-out infinite;
+  }
+
   .no-scrollbar {
     scrollbar-width: none;
   }
 
   .no-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+}
+
+@keyframes yaoyao-fx-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.6);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -10px) scale(1.1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -64px) scale(1);
+  }
+}
+
+@keyframes yaoyao-pulse {
+  50% {
+    opacity: 0.45;
+    transform: scale(0.88);
   }
 }
 
